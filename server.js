@@ -39,6 +39,7 @@ function pollServer() {
     console.log('ran query');
   });
 };
+pollServer();
 setInterval(pollServer, 5000);
   
   io.sockets.on('connection', function (socket) {
