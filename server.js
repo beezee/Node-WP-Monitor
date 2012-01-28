@@ -4,11 +4,13 @@ var http = require('http')
   , fs = require('fs')
   , events = require('events')
   , mysql = require('mysql')
+  , request = require('request')
+  , jsdom = require('jsdom')
   , client = mysql.createClient({
     user : 'USERNAME',
     password : 'PASSWORD',
     host : 'localhost',
-    database : 'DBNAME'
+    database : 'DATABASE'
   });
   
 io.set('log_level', 0);
@@ -29,15 +31,14 @@ function handler (req, res) {
 }
 
 function pollServer() {
- client.query(
-  'SELECT * FROM wp_posts WHERE post_status IN ("draft", "publish") ORDER BY post_date DESC LIMIT 10 ',
-  function (err, results, fields) {
-    if (err) {
-      throw err;
-    }
-    app.posts = results;
-    console.log('ran query');
+ request({ uri:'http://localhost/otherdev/wpnode/wp_endpoint.php' }, function (error, response, body) {
+  if (error && response.statusCode !== 200) {
+    console.log('Error when contacting google.com')
+  }
+  
+    app.posts = response.body;
   });
+ 
 };
 pollServer();
 setInterval(pollServer, 5000);
