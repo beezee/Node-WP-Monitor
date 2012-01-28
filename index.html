@@ -1,0 +1,31 @@
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" ></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.2.2/underscore-min.js"></script>
+<script>
+  var socket = io.connect('http://localhost');
+  socket.on('news', function (data) {
+    $('#listing').html('');
+    if ($('#listing').css('color') != 'rgb(0, 128, 0)') $('#listing').css('color', 'green');
+    else $('#listing').css('color', 'blue');
+    console.log(data);
+    _.each(data, function(post) {
+        console.log(post.post_title);
+        var html = _.template($('#template').html(), post);
+        $('#listing').append(html);
+    });
+  });
+  
+  function poll() {
+        socket.emit('my other event', { my: 'data' });
+    };
+        setInterval(poll, 10000);
+</script>
+<script id="template" type="text/template">
+    <h1><%= post_title %></h1>
+    <p><%= post_content %></p>
+</script>
+
+<div id="listing">
+    
+</div>
