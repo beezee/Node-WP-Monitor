@@ -8,9 +8,7 @@
     $('#listing').html('');
     if ($('#listing').css('color') != 'rgb(0, 128, 0)') $('#listing').css('color', 'green');
     else $('#listing').css('color', 'blue');
-    console.log(data);
     _.each(data, function(post) {
-        console.log(post.post_title);
         var html = _.template($('#template').html(), post);
         $('#listing').append(html);
     });
